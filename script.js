@@ -214,3 +214,5 @@ function renderTableData(petArr) {
     tableBodyEl.appendChild(row);
   }
 }
+
+console.log(`Tô Kha Vỹ`);
