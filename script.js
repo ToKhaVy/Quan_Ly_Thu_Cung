@@ -14,6 +14,8 @@ const sterilizedInput = document.getElementById("input-sterilized");
 
 const submitBtn = document.getElementById("submit-btn");
 const tableBodyEl = document.getElementById("tbody");
+const healthyBtn = document.getElementById("healthy-btn");
+const calBmiBtn = document.getElementById("calBmi-btn");
 
 const petArr = [];
 
@@ -29,6 +31,7 @@ const data1 = {
   vaccinated: true,
   dewormed: true,
   sterilized: true,
+  bmi: "?",
   date: new Date(2022, 2, 1),
 };
 
@@ -44,6 +47,7 @@ const data2 = {
   vaccinated: false,
   dewormed: false,
   sterilized: false,
+  bmi: "?",
   date: new Date(2022, 2, 2),
 };
 
@@ -67,6 +71,7 @@ submitBtn.addEventListener("click", function () {
     vaccinated: vaccinatedInput.checked,
     dewormed: dewormedInput.checked,
     sterilized: sterilizedInput.checked,
+    bmi: "?",
     date: new Date(),
   };
   // console.log(data);
@@ -76,8 +81,6 @@ submitBtn.addEventListener("click", function () {
   // K hợp lệ thì thông báo dữ liệu k hợp lệ.
 
   const validate = validateData(data);
-  // renderTableData(petArr);
-  // Hàm hiển thị danh sách thú cưng
 
   if (validate) {
     // 3. THÊM THÚ CƯNG VÀO DANH SÁCH
@@ -169,6 +172,7 @@ function validateData(data) {
   return isValidate;
 }
 
+// renderTableData(petArr);
 // Hàm renderTableData
 function renderTableData(petArr) {
   // Xoá nội dung hiện tại của mảng petArr
@@ -202,17 +206,95 @@ function renderTableData(petArr) {
             petArr[i].sterilized ? "bi-check-circle-fill" : "bi-x-circle-fill"
           }"></i>
         </td>
+        <td>${petArr[i].bmi}</td>
         <td>${petArr[i].date.getDate()}/${
       petArr[i].date.getMonth() + 1
     }/${petArr[i].date.getFullYear()}
         </td>
         <td>
-        <button type="button" class="btn btn-danger">
-          Delete
-        </button>
+	        <button class="btn btn-danger" onclick="deletePet('${
+            petArr[i].id
+          }')">Delete</button>
         </td>`;
     tableBodyEl.appendChild(row);
   }
 }
 
-console.log(`Tô Kha Vỹ`);
+// Hàm clearInput
+function clearInput() {
+  idInput.value = "";
+  nameInput.value = "";
+  ageInput.value = "";
+  weightInput.value = "";
+  lengthInput.value = "";
+  colorInput.value = "#000000";
+  typeInput.value = "Select Type";
+  breedInput.value = "Select Breed";
+  vaccinatedInput.checked = false;
+  dewormedInput.checked = false;
+  sterilizedInput.checked = false;
+}
+
+// Hàm xoá thú cưng
+function deletePet(petId) {
+  // confirm trước khi xoá thú cưng
+  if (confirm("Are you sure?")) {
+    // tìm thú cưng trùng id trong mảng petArr
+    for (let i = 0; i < petArr.length; i++) {
+      if (petId === petArr[i].id) {
+        // xoá khỏi mảng petArr
+        petArr.splice(i, 1);
+        // hiển thị lại mảng petArr
+        renderTableData(petArr);
+      }
+    }
+  }
+}
+
+// Hàm Show healthy pet
+let healthyCheck = true;
+
+healthyBtn.addEventListener("click", function () {
+  if (healthyCheck === false) {
+    // Hiển thị toàn bộ thú cưng
+    renderTableData(petArr);
+    // Đổi tên nút
+    healthyBtn.textContent = "Show Healthy Pet";
+    healthyCheck = true;
+  } else {
+    // Tạo mảng healthyPetArr bằng vòng lặp for
+    const healthyPetArr = [];
+    for (let i = 0; i < petArr.length; i++) {
+      if (
+        petArr[i].vaccinated === true &&
+        petArr[i].dewormed === true &&
+        petArr[i].sterilized === true
+      ) {
+        healthyPetArr.push(petArr[i]);
+      }
+    }
+    // Sau vòng lặp for đã tạo xong mảng
+
+    // Tạo mảng healthyPetArr bằng phương thức fillter
+    // Hiển thị mảng healthyPetArr
+    renderTableData(healthyPetArr);
+    // Đổi tên nút
+    healthyBtn.textContent = "Show All Pet";
+    healthyCheck = false;
+  }
+});
+
+// Gọi sự kiện click nút Calculate BMI
+calBmiBtn.onclick = function () {
+  // Duyệt mảng
+  for (let i = 0; i < petArr.length; i++) {
+    // Tính chỉ số BMI cho từng phần tử petArr
+    petArr[i].bmi =
+      // Toán tử 3 ngôi giữa chó và mèo
+      petArr[i].type === "Dog"
+        ? ((petArr[i].weight * 703) / petArr[i].length ** 2).toFixed(2)
+        : ((petArr[i].weight * 886) / petArr[i].length ** 2).toFixed(2);
+  }
+  // hiển thị lại Table Data
+  renderTableData(petArr);
+};
