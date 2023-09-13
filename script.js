@@ -103,70 +103,61 @@ function validateData(data) {
     alert("Please input for Pet ID!");
     isValidate = false;
   }
-
-  // data.name
-  if (data.name.trim() === "") {
-    alert("Please input for Pet Name!");
-    isValidate = false;
-  }
-
-  // data.age
-  if (isNaN(data.age)) {
-    alert("Please input for Age!");
-    isValidate = false;
-  }
-
-  // data.weight
-  if (isNaN(data.weight)) {
-    alert("Please input for Weight!");
-    isValidate = false;
-  }
-
-  // data.length
-  if (isNaN(data.length)) {
-    alert("Please input for Length!");
-    isValidate = false;
-  }
-
   //Kiểm tra ID có trùng không.
   //Duyệt mảng petArr
-  for (let i = 0; i < petArr.length; i++) {
-    if (data.id === petArr[i].id) {
-      alert("ID must unique!");
-      isValidate = false;
-      break;
+  else
+    for (let i = 0; i < petArr.length; i++) {
+      if (data.id === petArr[i].id) {
+        alert("ID must unique!");
+        isValidate = false;
+        break;
+      }
     }
-  }
+  if (data.id.trim() != "" && isValidate === true) {
+    // data.name
+    if (data.name.trim() === "") {
+      alert("Please input for Pet Name!");
+      isValidate = false;
+    }
 
-  // Kiểm tra dữ liệu có hợp lệ không.
-  // data.age
-  if (data.age < 1 || data.age > 15) {
-    alert("Age must be between 1 and 15!");
-    isValidate = false;
-  }
+    // data.age
+    else if (isNaN(data.age)) {
+      alert("Please input for Age!");
+      isValidate = false;
+    } else if (data.age < 1 || data.age > 15) {
+      alert("Age must be between 1 and 15!");
+      isValidate = false;
+    }
 
-  // data.weight
-  if (data.weight < 1 || data.weight > 15) {
-    alert("Weight must be between 1 and 15!");
-    isValidate = false;
-  }
+    // data.type
+    else if (data.type === "Select Type") {
+      alert("Please select Type!");
+      isValidate = false;
+    }
 
-  // data.length
-  if (data.length < 1 || data.length > 100) {
-    alert("Length must be between 1 and 100!");
-    isValidate = false;
-  }
+    // data.weight
+    else if (isNaN(data.weight)) {
+      alert("Please input for Weight!");
+      isValidate = false;
+    } else if (data.weight < 1 || data.weight > 15) {
+      alert("Weight must be between 1 and 15!");
+      isValidate = false;
+    }
 
-  // data.type
-  if (data.type === "Select Type") {
-    alert("Please select Type!");
-    isValidate = false;
-  }
+    // data.length
+    else if (isNaN(data.length)) {
+      alert("Please input for Length!");
+      isValidate = false;
+    } else if (data.length < 1 || data.length > 100) {
+      alert("Length must be between 1 and 100!");
+      isValidate = false;
+    }
 
-  // data.breed
-  if (data.breed === "Select Breed") {
-    alert("Please select Breed!");
-    isValidate = false;
+    // data.breed
+    else if (data.breed === "Select Breed") {
+      alert("Please select Breed!");
+      isValidate = false;
+    }
   }
 
   return isValidate;
@@ -177,7 +168,7 @@ function validateData(data) {
 function renderTableData(petArr) {
   // Xoá nội dung hiện tại của mảng petArr
   tableBodyEl.innerHTML = "";
-
+  // Hiển thị nội dung mới của mảng petArr
   for (let i = 0; i < petArr.length; i++) {
     const row = document.createElement("tr");
     row.innerHTML = `
@@ -212,9 +203,9 @@ function renderTableData(petArr) {
     }/${petArr[i].date.getFullYear()}
         </td>
         <td>
-	        <button class="btn btn-danger" onclick="deletePet('${
-            petArr[i].id
-          }')">Delete</button>
+        <!-- đặt click event trong html -->
+	        <button class="btn btn-danger" 
+          onclick="deletePet('${petArr[i].id}')">Delete</button>
         </td>`;
     tableBodyEl.appendChild(row);
   }
